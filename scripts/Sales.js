@@ -1,10 +1,21 @@
+
+
 export const Sales = async () => {
-    const sales = await fetch("http://localhost:8088/orders").then(res => res.json())
+    const sales = await fetch("http://localhost:8088/orders?_expand=entree&_expand=side&_expand=vegetable").then(res => res.json())
 
-    let salesDivs = sales.map()
 
-    salesDivs = salesDivs.join("")
+    let html = '<div id="Monthly-Sales">'
+    let salesDivs = sales.map(
+        (order) => {
+            const orderPrice = order.entree.price + order.side.price + order.vegetable.price
+            return `<p><strong>Order#${order.id} Price: $${orderPrice.toFixed(2)}</strong></p>`
+        }
 
-    return salesDivs
+    )
+
+    html += salesDivs.join(" ")
+    html += '</div>'
+
+    return html
 }
 
